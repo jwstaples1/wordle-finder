@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang='en'>
+	<head>
+		<title>WORD-le Finder</title>
+		<meta charset='utf-8'>
+		<meta name='viewport' content='width=device-width, initial-scale=1'>
+		<script src='OSC.js'></script>
+		<link href='styles.css' rel='stylesheet'>
+	</head>
+	<body>
+		<header>
+			<img src='images/wordle-finder-logo.png' id='logo' alt='WORD-le Finder Logo'>
+		</header>
+		<h1>Current Status:</h1>
+		<form id='wordInput' method='post' action='processWord.php'>
+			<input class='letter' name='letters[]' type='text' maxlength='1' size='1' placeholder='-' autocomplete="off">
+			<input class='letter' name='letters[]' type='text' maxlength='1' size='1' placeholder='-' autocomplete="off">
+			<input class='letter' name='letters[]' type='text' maxlength='1' size='1' placeholder='-' autocomplete="off">
+			<input class='letter' name='letters[]' type='text' maxlength='1' size='1' placeholder='-' autocomplete="off">
+			<input class='letter' name='letters[]' type='text' maxlength='1' size='1' placeholder='-' autocomplete="off"><br><br>
+			<input type='submit' value='Search'>
+		</form><br><br><br>
+		<script>
+			// array(s) of all of the letters for ease of access
+			var inputArr = [];
+			var allInputs = document.querySelectorAll('.letter');
+
+			// Gives each input a listener for a change in text
+			allInputs.forEach(function(input) {
+				inputArr.push(input);
+				input.addEventListener("input", manageText)
+			})
+
+			/* This entire method is for the sole purpose of making the experience smoother;
+				usually you would have to tab or manually click between the boxes, but this method
+				makes it to where whenever a value is typed within a box, it will automatically move
+				you to the next box and vice-versa (doesn't necessarily respond to backspacing, just
+				the value in the box being removed).
+			*/
+			function manageText(e) {
+				if(e.target.value != '') { // if there is a value in the box
+					if(inputArr.indexOf(e.target) != 4) { // if its not the last box
+						var newTarget = inputArr[inputArr.indexOf(e.target) + 1]; // move up a box
+						newTarget.focus();
+						newTarget.select();
+						e.target.style["background-color"] = "#00ae6e"; // changes the box color to green
+					} else if(inputArr.indexOf(e.target) == 4) { // if the last box was typed in
+						e.target.style["background-color"] = "#00ae6e";
+					}
+				} else { // if there is no value
+					if(inputArr.indexOf(e.target) != 0) { // if the box isn't the first
+						var newTarget = inputArr[inputArr.indexOf(e.target) - 1]; // move down a box
+						newTarget.focus();
+						newTarget.select();
+						e.target.style["background-color"] = "white"; // set the old box back to white
+						if(inputArr.indexOf(newTarget == 0)) {
+							newTarget.style["background-color"] = 'white'; // set the first box to white
+						}
+					}
+				}
+			}
+		</script>
+		<footer>
+			<p style='text-align: center; padding: 8px'>Created by Josh Staples for CIS-255<br><a href='mailto:jstaples@student.sc4.edu'>jstaples@student.sc4.edu</a></p>
+		</footer>
+	</body>
+</html>
